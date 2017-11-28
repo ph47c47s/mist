@@ -275,8 +275,10 @@ const Utils = {
     },
     * openAndFocusNewWindow(type, fnPromise) {
         yield fnPromise();
+        yield Q.delay(500);
         const handle = yield this.selectWindowHandleByType(type);
         yield this.client.window(handle);
+        yield Q.delay(500);
     },
     * selectWindowHandleByType(type) {
         const client = this.client;
@@ -404,16 +406,15 @@ const Utils = {
             return client.click('span.connect-button');
         });
         yield client.click('.dapp-primary-button');
+        yield Q.delay(1000);
 
-        console.log(`∆∆∆ pinCurrentTab: ${this.mainWindowHandle}`);
-        const windowHandles = (yield client.windowHandles()).value;
-        console.log(`∆∆∆ windowHandles ${windowHandles}`);
         yield client.window(this.mainWindowHandle); // selects main window again
         yield Q.delay(1000);
 
         const pinnedWebview = (yield client.windowHandles()).value.pop();
         return pinnedWebview;
     },
+
     * navigateTo(url) {
         const client = this.client;
         yield client.setValue('#url-input', url);
